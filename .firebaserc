@@ -1,0 +1,13 @@
+{
+  "projects": {
+    "default": "hadaya-4d357"
+  },
+  "targets": {
+    "hadaya-4d357": {
+      "hosting": {
+        "miniapp": ["hadaya-4d357"],
+        "admin": ["hadiya-admin"]
+      }
+    }
+  }
+}

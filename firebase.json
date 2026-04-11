@@ -1,0 +1,71 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "hadaya-4d357",
+          "appId": "1:1037343578785:android:d2893817b4b18d967f6ee0",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "hadaya-4d357",
+          "appId": "1:1037343578785:ios:537d128132e61bf47f6ee0",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "hadaya-4d357",
+          "configurations": {
+            "android": "1:1037343578785:android:d2893817b4b18d967f6ee0",
+            "ios": "1:1037343578785:ios:537d128132e61bf47f6ee0",
+            "web": "1:1037343578785:web:8538ea64b5e3b6c67f6ee0"
+          }
+        }
+      }
+    }
+  },
+  "hosting": [
+    {
+      "target": "miniapp",
+      "public": "build/web_miniapp",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "**", "destination": "/index.html" }
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css|wasm)",
+          "headers": [
+            { "key": "Cache-Control", "value": "max-age=31536000" }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "admin",
+      "public": "build/web_admin",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "**", "destination": "/index.html" }
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css|wasm)",
+          "headers": [
+            { "key": "Cache-Control", "value": "max-age=31536000" }
+          ]
+        }
+      ]
+    }
+  ],
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

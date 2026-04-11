@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Orders: hamma yoza oladi (do'kon app — auth shart emas)
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if request.auth != null
+                            && request.auth.token.email != null;
+    }
+
+    // Products: hamma o'qiydi, faqat admin yozadi
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email != null;
+    }
+
+    // Categories: hamma o'qiydi, faqat admin yozadi
+    match /categories/{catId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email != null;
+    }
+
+    // Banners: hamma o'qiydi, faqat admin yozadi
+    match /banners/{bannerId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email != null;
+    }
+
+    // Stats
+    match /stats/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1037343578785",
+    "project_id": "hadaya-4d357",
+    "storage_bucket": "hadaya-4d357.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1037343578785:android:d2893817b4b18d967f6ee0",
+        "android_client_info": {
+          "package_name": "com.hadiya.hadiya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1037343578785-52jlspt6bi2230u8jk17so5vr59db9un.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZsxEt-E0JSlzTVsHIGqgMkyN64cSEmyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1037343578785-52jlspt6bi2230u8jk17so5vr59db9un.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
