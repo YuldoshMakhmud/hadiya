@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../app_theme.dart';
 import '../models/product.dart';
+import '../models/cart_item.dart';
 import '../providers/app_provider.dart';
+import 'checkout_screen.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -136,54 +138,8 @@ class ProductDetailScreen extends StatelessWidget {
                       color: Color(0xFF1A1A1A),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                          color: Colors.amber.withOpacity(0.25)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ...List.generate(5, (i) {
-                          final filled = i < product.rating.floor();
-                          final half = !filled &&
-                              i < product.rating &&
-                              product.rating - i > 0;
-                          return Icon(
-                            filled
-                                ? Icons.star_rounded
-                                : (half
-                                    ? Icons.star_half_rounded
-                                    : Icons.star_outline_rounded),
-                            color: Colors.amber.shade600,
-                            size: 22,
-                          );
-                        }),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${product.rating}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2A2A2A),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '(${product.reviewCount} ta sharh)',
-                          style: const TextStyle(
-                              color: AppColors.grey, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 16),
-                  // Narx bloki — ikki valyuta
+                  // Narx bloki
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
@@ -194,24 +150,18 @@ class ProductDetailScreen extends StatelessWidget {
                           color: AppColors.primary.withOpacity(0.15)),
                     ),
                     child: Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                const Text('🇰🇷 ',
-                                    style: TextStyle(fontSize: 14)),
-                                const Text(
-                                  'Won narxi',
+                            Row(children: [
+                              const Text('🇰🇷 ',
+                                  style: TextStyle(fontSize: 14)),
+                              const Text('Won narxi',
                                   style: TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 11),
-                                ),
-                              ],
-                            ),
+                                      color: AppColors.grey, fontSize: 11)),
+                            ]),
                             const SizedBox(height: 2),
                             Text(
                               '₩${product.priceKrw.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}',
@@ -226,25 +176,19 @@ class ProductDetailScreen extends StatelessWidget {
                           ],
                         ),
                         Container(
-                          width: 1,
-                          height: 40,
-                          color: AppColors.primary.withOpacity(0.2),
-                        ),
+                            width: 1,
+                            height: 40,
+                            color: AppColors.primary.withOpacity(0.2)),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Row(
-                              children: [
-                                const Text('🇺🇿 ',
-                                    style: TextStyle(fontSize: 14)),
-                                const Text(
-                                  'So\'m narxi',
+                            Row(children: [
+                              const Text('🇺🇿 ',
+                                  style: TextStyle(fontSize: 14)),
+                              const Text('So\'m narxi',
                                   style: TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 11),
-                                ),
-                              ],
-                            ),
+                                      color: AppColors.grey, fontSize: 11)),
+                            ]),
                             const SizedBox(height: 2),
                             Text(
                               "${(product.priceUzs / 1000).toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ming",
@@ -291,8 +235,7 @@ class ProductDetailScreen extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
           decoration: const BoxDecoration(
             color: AppColors.white,
             boxShadow: [
@@ -304,20 +247,19 @@ class ProductDetailScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
+              // Narx
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Narxi',
-                      style: TextStyle(
-                          color: AppColors.grey, fontSize: 11),
-                    ),
+                    const Text('Narxi',
+                        style:
+                            TextStyle(color: AppColors.grey, fontSize: 11)),
                     Text(
                       product.getPrice(provider.isWon),
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 19,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
                       ),
@@ -325,7 +267,9 @@ class ProductDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              ElevatedButton.icon(
+              const SizedBox(width: 10),
+              // Savatga
+              OutlinedButton.icon(
                 onPressed: () {
                   provider.addToCart(product);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -337,11 +281,43 @@ class ProductDetailScreen extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.shopping_bag_outlined, size: 18),
-                label: const Text('Savatga'),
-                style: ElevatedButton.styleFrom(
+                icon: const Icon(Icons.shopping_bag_outlined, size: 17),
+                label: const Text('Savat'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.primary),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 24, vertical: 12),
+                      horizontal: 16, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Sotib olish
+              ElevatedButton.icon(
+                onPressed: () {
+                  final price =
+                      provider.isWon ? product.priceKrw : product.priceUzs;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CheckoutScreen(
+                        items: [CartItem(product: product, quantity: 1)],
+                        total: price,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.bolt, size: 17),
+                label: const Text('Sotib olish'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
                 ),
               ),
             ],
@@ -354,15 +330,11 @@ class ProductDetailScreen extends StatelessWidget {
 
 class _CategoryChip extends StatelessWidget {
   final Product product;
-
   const _CategoryChip({required this.product});
-
-  String get categoryLabel => product.category.isNotEmpty
-      ? product.category
-      : 'Kategoriya';
 
   @override
   Widget build(BuildContext context) {
+    if (product.category.isEmpty) return const SizedBox.shrink();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
@@ -371,7 +343,7 @@ class _CategoryChip extends StatelessWidget {
         border: Border.all(color: AppColors.primary.withOpacity(0.3)),
       ),
       child: Text(
-        categoryLabel,
+        product.category,
         style: const TextStyle(
           color: AppColors.primary,
           fontWeight: FontWeight.w600,

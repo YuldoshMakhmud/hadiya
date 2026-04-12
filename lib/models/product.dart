@@ -6,8 +6,6 @@ class Product {
   final double priceUzs;
   final String category;
   final String imageUrl;
-  final double rating;
-  final int reviewCount;
   final bool isNew;
   final bool isBestSeller;
 
@@ -19,8 +17,6 @@ class Product {
     required this.priceUzs,
     required this.category,
     required this.imageUrl,
-    this.rating = 4.5,
-    this.reviewCount = 0,
     this.isNew = false,
     this.isBestSeller = false,
   });

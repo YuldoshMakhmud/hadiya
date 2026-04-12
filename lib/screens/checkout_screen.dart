@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../app_theme.dart';
 import '../models/cart_item.dart';
 import '../providers/app_provider.dart';
@@ -433,11 +435,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                   const SizedBox(height: 20),
 
+                  // ── To'lov rekvizitlari ────────────────────────
+                  _section('💳 To\'lov rekvizitlari'),
+                  const SizedBox(height: 10),
+                  _buildBankCard(),
+
+                  const SizedBox(height: 20),
+
                   // ── Chek rasmi ─────────────────────────────────
                   _section('🧾 To\'lov cheki (ixtiyoriy)'),
                   const SizedBox(height: 4),
                   Text(
-                    'To\'lov skrinshotini yuklang',
+                    'To\'lovdan so\'ng skrinshot yuboring',
                     style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
                   ),
                   const SizedBox(height: 10),
@@ -451,6 +460,137 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
           // ── Bottom: jami + tasdiqlash ─────────────────────────
           _buildBottom(isWon: isWon, busy: busy),
+        ],
+      ),
+    );
+  }
+
+  // ── Bank rekvizitlari ────────────────────────────────────────────
+  Widget _buildBankCard() {
+    final bankName = dotenv.env['BANK_NAME'] ?? '';
+    final account = dotenv.env['BANK_ACCOUNT'] ?? '';
+    final owner = dotenv.env['BANK_OWNER'] ?? '';
+    final currency = dotenv.env['BANK_CURRENCY'] ?? 'UZS';
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryLight],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.35),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.credit_card, color: Colors.white, size: 22),
+              const SizedBox(width: 8),
+              Text(
+                bankName,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  currency,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          // Karta raqami
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  account,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(
+                      text: account.replaceAll(' ', '')));
+                  _showSnack('Karta raqami nusxalandi ✓');
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.copy,
+                      color: Colors.white, size: 18),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              const Icon(Icons.person_outline,
+                  color: Colors.white60, size: 15),
+              const SizedBox(width: 6),
+              Text(
+                owner,
+                style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.white70, size: 14),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'To\'lovdan so\'ng chek rasmini yuboring',
+                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

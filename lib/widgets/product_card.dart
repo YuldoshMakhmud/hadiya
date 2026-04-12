@@ -126,35 +126,6 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
 
-                // Past chap: ⭐ Reyting
-                Positioned(
-                  bottom: 7,
-                  left: 8,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.star_rounded,
-                          size: 14, color: Colors.amber),
-                      const SizedBox(width: 3),
-                      Text(
-                        '${product.rating}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 3),
-                      Text(
-                        '(${product.reviewCount})',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
 
                 // Past o'ng: ➕ Savatga qo'shish tugmasi
                 Positioned(

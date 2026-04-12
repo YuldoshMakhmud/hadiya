@@ -80,8 +80,6 @@ class AppProvider extends ChangeNotifier {
             priceUzs: (data['priceUzs'] as num? ?? 0).toDouble(),
             category: data['category'] as String? ?? '',
             imageUrl: data['imageUrl'] as String? ?? '',
-            rating: (data['rating'] as num? ?? 4.5).toDouble(),
-            reviewCount: (data['reviewCount'] as num? ?? 0).toInt(),
             isNew: data['isNew'] == true,
             isBestSeller: data['isBestSeller'] == true,
           );
