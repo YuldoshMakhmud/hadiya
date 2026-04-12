@@ -7,10 +7,23 @@ service firebase.storage {
       allow read: if true;
     }
 
-    // Faqat login bo'lgan admin yoza oladi
-    match /hadiya/{allPaths=**} {
+    // Admin — products, categories, banners yozadi
+    match /hadiya/products/{allPaths=**} {
       allow write: if request.auth != null
                    && request.auth.token.email != null;
+    }
+    match /hadiya/categories/{allPaths=**} {
+      allow write: if request.auth != null
+                   && request.auth.token.email != null;
+    }
+    match /hadiya/banners/{allPaths=**} {
+      allow write: if request.auth != null
+                   && request.auth.token.email != null;
+    }
+
+    // User — chek rasmini yuklaydi (auth shart emas)
+    match /hadiya/receipts/{allPaths=**} {
+      allow write: if true;
     }
   }
 }

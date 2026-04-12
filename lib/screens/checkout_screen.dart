@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final _addressCtrl = TextEditingController();
   final _commentCtrl = TextEditingController();
 
-  File? _receiptFile;
+  Uint8List? _receiptBytes;
+  String _receiptExt = 'jpg';
   bool _uploading = false;
   bool _placing = false;
 
@@ -131,7 +132,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       final xFile = await ImagePicker()
           .pickImage(source: source, imageQuality: 75);
       if (xFile == null || !mounted) return;
-      setState(() => _receiptFile = File(xFile.path));
+      final bytes = await xFile.readAsBytes();
+      final ext = xFile.path.split('.').last.toLowerCase();
+      if (!mounted) return;
+      setState(() {
+        _receiptBytes = bytes;
+        _receiptExt = ext.isEmpty ? 'jpg' : ext;
+      });
     } catch (e) {
       if (!mounted) return;
       _showSnack('Rasm tanlashda xato: $e', isError: true);
@@ -140,13 +147,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   // ── Firebase Storage yuklash ─────────────────────────────────────
   Future<String?> _uploadReceipt(String orderId) async {
-    if (_receiptFile == null) return null;
+    if (_receiptBytes == null) return null;
     setState(() => _uploading = true);
     try {
-      final ext = _receiptFile!.path.split('.').last;
       final ref = FirebaseStorage.instance.ref(
-          'hadiya/receipts/$orderId/chek_${DateTime.now().millisecondsSinceEpoch}.$ext');
-      await ref.putFile(_receiptFile!);
+          'hadiya/receipts/$orderId/chek_${DateTime.now().millisecondsSinceEpoch}.$_receiptExt');
+      final metadata = SettableMetadata(
+          contentType: 'image/$_receiptExt');
+      await ref.putData(_receiptBytes!, metadata);
       return await ref.getDownloadURL();
     } catch (e) {
       debugPrint('Chek yuklash xato: $e');
@@ -196,7 +204,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     // Vaqtinchalik ID (chek yuklaish uchun)
     final tempId = 'temp_${DateTime.now().millisecondsSinceEpoch}';
     String? receiptUrl;
-    if (_receiptFile != null) {
+    if (_receiptBytes != null) {
       receiptUrl = await _uploadReceipt(tempId);
     }
 
@@ -607,23 +615,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: _receiptFile != null
+            color: _receiptBytes != null
                 ? AppColors.primary
                 : Colors.grey.shade300,
-            width: _receiptFile != null ? 1.5 : 1,
+            width: _receiptBytes != null ? 1.5 : 1,
           ),
           boxShadow: [
             BoxShadow(
                 color: Colors.black.withOpacity(0.04), blurRadius: 8)
           ],
         ),
-        child: _receiptFile != null
+        child: _receiptBytes != null
             ? Stack(
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: Image.file(
-                      _receiptFile!,
+                    child: Image.memory(
+                      _receiptBytes!,
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),
@@ -633,7 +641,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     top: 8,
                     right: 8,
                     child: GestureDetector(
-                      onTap: () => setState(() => _receiptFile = null),
+                      onTap: () => setState(() => _receiptBytes = null),
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: const BoxDecoration(

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../app_theme.dart';
 import '../providers/app_provider.dart';
 import '../providers/orders_provider.dart';
+import 'order_detail_screen.dart';
 
 class OrdersScreen extends StatelessWidget {
   final bool embedded;
@@ -75,10 +76,21 @@ class OrdersScreen extends StatelessWidget {
           itemBuilder: (context, i) {
             final doc = sorted[i];
             final data = doc.data() as Map<String, dynamic>;
-            return _OrderCard(
-              orderId: doc.id,
-              data: data,
-              isWon: provider.isWon,
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => OrderDetailScreen(
+                    orderId: doc.id,
+                    data: data,
+                  ),
+                ),
+              ),
+              child: _OrderCard(
+                orderId: doc.id,
+                data: data,
+                isWon: provider.isWon,
+              ),
             );
           },
         );
