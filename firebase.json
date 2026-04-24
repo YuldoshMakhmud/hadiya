@@ -32,7 +32,7 @@
     {
       "target": "miniapp",
       "public": "build/web_miniapp",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": ["firebase.json", "**/.last_build_id", "**/node_modules/**"],
       "rewrites": [
         { "source": "**", "destination": "/index.html" }
       ],
@@ -48,7 +48,7 @@
     {
       "target": "admin",
       "public": "build/web_admin",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": ["firebase.json", "**/.last_build_id", "**/node_modules/**"],
       "rewrites": [
         { "source": "**", "destination": "/index.html" }
       ],
